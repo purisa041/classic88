@@ -1,77 +1,367 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>สปีด-เทค // คลังอะไหล่ JDM แท้ 50 รายการ</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="scanline"></div>
-    
-    <header>
-        <div class="logo">
-            <span>湾岸</span> SPEED-TECH <span class="badge">JDM 50 ITEMS</span>
-        </div>
-        <nav>
-            <a href="#" class="active">คลังอะไหล่</a>
-            <a href="#" id="cart-btn">ตะกร้าสินค้า (<span id="cart-count">0</span>)</a>
-        </nav>
-    </header>
+:root {
+    --bg-color: #0d0e12;
+    --card-bg: #151821;
+    --accent-red: #ff2a2a;
+    --accent-orange: #ff7700;
+    --accent-cyan: #00f0ff;
+    --text-main: #ffffff;
+    --text-dim: #8a92a6;
+    --font-heading: 'Orbitron', 'Prompt', sans-serif;
+    --font-body: 'Prompt', sans-serif;
+}
 
-    <main class="container">
-        <section class="search-section">
-            <h1 class="glitch-text">คลังอะไหล่แต่ง JDM (50 รายการ)</h1>
-            
-            <div class="model-buttons">
-                <button class="btn-model active" onclick="filterModel('all')">ทั้งหมด (50)</button>
-                <button class="btn-model" onclick="filterModel('skyline')">NISSAN (GT-R / SILVIA)</button>
-                <button class="btn-model" onclick="filterModel('supra')">TOYOTA (SUPRA / AE86)</button>
-                <button class="btn-model" onclick="filterModel('honda')">HONDA (CIVIC / INTEGRAL)</button>
-                <button class="btn-model" onclick="filterModel('impreza')">SUBARU (WRX / STI)</button>
-                <button class="btn-model" onclick="filterModel('rx7')">MAZDA (RX-7 / RX-8)</button>
-                <button class="btn-model" onclick="filterModel('universal')">UNIVERSAL (ล้อ/เบาะ/วัดรอบ)</button>
-            </div>
-        </section>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        <section class="product-grid" id="product-container"></section>
-    </main>
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    background-image: 
+        radial-gradient(circle at 50% 0%, rgba(255, 42, 42, 0.15), transparent 50%),
+        linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 20px;
+}
 
-    <div id="cart-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" id="close-modal">&times;</span>
-            <h2>// ตะกร้าสินค้าและการชำระเงิน</h2>
-            
-            <div id="cart-items" class="cart-items-list">
-                <p class="empty-msg">ไม่มีสินค้าในตะกร้า</p>
-            </div>
+.scanline {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    z-index: 99;
+    pointer-events: none;
+    opacity: 0.6;
+}
 
-            <div class="cart-total">
-                <span>ราคารวมทั้งหมด:</span>
-                <span id="total-price" class="total-amount">฿ 0</span>
-            </div>
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 5%;
+    border-bottom: 2px solid var(--accent-red);
+    background: rgba(13, 14, 18, 0.9);
+    backdrop-filter: blur(5px);
+}
 
-            <form id="checkout-form" onsubmit="processOrder(event)">
-                <h3>// ข้อมูลและที่อยู่สำหรับจัดส่ง</h3>
-                <div class="input-group">
-                    <input type="text" id="cust-name" placeholder="ชื่อ-นามสกุล ผู้รับ" required>
-                </div>
-                <div class="input-group">
-                    <input type="tel" id="cust-phone" placeholder="เบอร์โทรศัพท์ติดต่อ" required>
-                </div>
-                <div class="input-group">
-                    <textarea id="cust-address" rows="3" placeholder="ที่อยู่จัดส่งอย่างละเอียด" required></textarea>
-                </div>
-                <button type="submit" class="btn-checkout">ยืนยันการสั่งซื้อ // สั่งซื้อทันที</button>
-            </form>
-        </div>
-    </div>
+.logo {
+    font-family: var(--font-heading);
+    font-weight: 900;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    font-style: italic;
+}
 
-    <footer>
-        <p>SPEED-TECH คลังอะไหล่ JDM แท้ // โตเกียว - กรุงเทพฯ // ก่อตั้งปี 1999</p>
-    </footer>
+.logo span { color: var(--accent-red); }
 
-    <script src="script.js"></script>
-</body>
-</html>
+.logo .badge {
+    font-size: 0.75rem;
+    background: var(--accent-red);
+    color: #000;
+    padding: 2px 6px;
+    border-radius: 2px;
+    vertical-align: middle;
+    font-style: normal;
+}
+
+nav a {
+    color: var(--text-main);
+    text-decoration: none;
+    margin-left: 20px;
+    font-family: var(--font-heading);
+    font-size: 0.95rem;
+    transition: 0.3s;
+}
+
+nav a.active, nav a:hover {
+    color: var(--accent-orange);
+    text-shadow: 0 0 10px var(--accent-orange);
+}
+
+.container {
+    max-width: 1300px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.search-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.glitch-text {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-style: italic;
+    color: var(--text-main);
+    text-shadow: 3px 3px var(--accent-red);
+    margin-bottom: 25px;
+}
+
+.model-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.btn-model {
+    background: #1b1f2b;
+    border: 1px solid #2f364a;
+    color: var(--text-main);
+    padding: 10px 16px;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 3px;
+    transform: skew(-10deg);
+    transition: 0.3s;
+}
+
+.btn-model:hover {
+    border-color: var(--accent-cyan);
+    color: var(--accent-cyan);
+}
+
+.btn-model.active {
+    background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+    border-color: transparent;
+    color: #fff;
+    box-shadow: 0 0 12px var(--accent-red);
+}
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid #252a38;
+    position: relative;
+    overflow: hidden;
+    transition: 0.3s;
+    border-radius: 4px;
+    padding-top: 25px;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent-cyan);
+    box-shadow: 0 5px 20px rgba(0, 240, 255, 0.2);
+}
+
+.card-tag {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: var(--accent-red);
+    color: #000;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    z-index: 2;
+    border-radius: 2px;
+}
+
+.card-details {
+    padding: 18px;
+}
+
+.car-model {
+    font-size: 0.75rem;
+    color: var(--accent-cyan);
+    font-family: var(--font-heading);
+    display: block;
+    margin-bottom: 6px;
+}
+
+.card-details h3 {
+    font-size: 1rem;
+    margin-bottom: 6px;
+    line-height: 1.4;
+    height: 2.8em;
+    overflow: hidden;
+}
+
+.part-code {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-bottom: 20px;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #252a38;
+    padding-top: 12px;
+}
+
+.price {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--accent-orange);
+    font-weight: 700;
+}
+
+.btn-buy {
+    background: transparent;
+    border: 1px solid var(--accent-red);
+    color: var(--accent-red);
+    padding: 6px 14px;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-buy:hover {
+    background: var(--accent-red);
+    color: #fff;
+    box-shadow: 0 0 10px var(--accent-red);
+}
+
+/* Modal ตะกร้าสินค้า */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: 5% auto;
+    padding: 30px;
+    border: 1px solid var(--accent-red);
+    box-shadow: 0 0 20px rgba(255, 42, 42, 0.4);
+    width: 90%;
+    max-width: 550px;
+    position: relative;
+    border-radius: 4px;
+}
+
+.close-btn {
+    color: var(--text-dim);
+    position: absolute;
+    right: 20px; top: 15px;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.close-btn:hover { color: var(--accent-red); }
+
+.modal-content h2, .modal-content h3 {
+    font-family: var(--font-heading);
+    color: var(--accent-cyan);
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+.cart-items-list {
+    max-height: 180px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #252a38;
+    padding-bottom: 10px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed #252a38;
+}
+
+.item-price {
+    font-size: 0.85rem;
+    color: var(--accent-orange);
+}
+
+.btn-remove {
+    background: transparent;
+    border: 1px solid var(--accent-red);
+    color: var(--accent-red);
+    padding: 2px 8px;
+    cursor: pointer;
+    font-size: 0.75rem;
+}
+
+.btn-remove:hover {
+    background: var(--accent-red);
+    color: #fff;
+}
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+}
+
+.total-amount {
+    color: var(--accent-orange);
+    font-weight: bold;
+}
+
+.input-group { margin-bottom: 12px; }
+
+.input-group input, .input-group textarea {
+    width: 100%;
+    padding: 10px;
+    background: #0d0e12;
+    border: 1px solid #2f364a;
+    color: #fff;
+    font-family: var(--font-body);
+    border-radius: 3px;
+    outline: none;
+}
+
+.input-group input:focus, .input-group textarea:focus {
+    border-color: var(--accent-cyan);
+}
+
+.btn-checkout {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+    border: none;
+    color: #fff;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+}
+
+.btn-checkout:hover { box-shadow: 0 0 15px var(--accent-red); }
+
+.empty-msg {
+    color: var(--text-dim);
+    text-align: center;
+    padding: 10px 0;
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    font-family: var(--font-heading);
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    border-top: 1px solid #252a38;
+    margin-top: 60px;
+}
